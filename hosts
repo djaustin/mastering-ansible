@@ -8,7 +8,7 @@ db01
 lb01
 
 [control]
-control
+localhost
 
 [staging]
 app01
