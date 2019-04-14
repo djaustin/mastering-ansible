@@ -9,3 +9,8 @@ lb01
 
 [control]
 control
+
+[staging]
+app01
+db01
+lb01
