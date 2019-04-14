@@ -1,0 +1,11 @@
+---
+- hosts: loadbalancers
+  gather_facts: no
+  tasks: 
+    - name: Install nginx
+      become: yes
+      package: 
+        state: present
+        name: nginx
+      tags: 
+        - nginx

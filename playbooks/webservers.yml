@@ -1,0 +1,16 @@
+---
+- hosts: webservers
+  gather_facts: no
+  tasks: 
+    - name: Install webserver packages      
+      become: yes
+      package: 
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+        - mod_wsgi
+        - python-virtualenv
+        - python-pip
+
+
