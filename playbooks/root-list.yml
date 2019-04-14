@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks: 
+    - name: Get root items
+      shell: ls -l / | awk '/root/ {print $9}'
+      changed_when: no 
+      register: hostname
+    - name: Show items gathered
+      debug: 
+        msg: "{{ item }}"
+      with_items: "{{ hostname.stdout_lines }}"
