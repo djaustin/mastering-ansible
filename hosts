@@ -1,0 +1,11 @@
+[webservers]
+app[01:02]
+
+[dbservers]
+db01
+
+[loadbalancers]
+lb01
+
+[control]
+control
