@@ -3,7 +3,7 @@
   gather_facts: no
   tasks: 
     - name: Get root items
-      shell: ls -l / | awk '/root/ {print $9}'
+      command: ls -1 /
       changed_when: no 
       register: hostname
     - name: Show items gathered

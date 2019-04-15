@@ -1,0 +1,46 @@
+---
+- hosts: loadbalancers
+  gather_facts: no
+  become: yes
+  tasks: 
+    - name: Stop loadbalancer
+      service: 
+        state: stopped
+        name: nginx
+
+- hosts: webservers
+  gather_facts: no
+  become: yes
+  tasks: 
+    - name: Stop web server
+      service:
+        state: stopped
+        name: httpd
+
+- hosts: dbservers
+  gather_facts: no
+  become: yes
+  tasks: 
+    - name: Restart database
+      service: 
+        name: mariadb
+        state: restarted
+
+- hosts: loadbalancers
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Start loadbalancer
+      service:
+        state: started
+        name: nginx
+
+- hosts: webservers
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Start web server
+      service:
+        state: started
+        name: httpd
+  
