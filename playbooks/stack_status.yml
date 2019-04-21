@@ -49,6 +49,17 @@
       register: end_to_end_response
       failed_when: "'Hello, from sunny' not in end_to_end_response.content"
 
+- hosts: control
+  gather_facts: no
+  tasks:
+    - name: verify end-to-end database response
+      uri: 
+        url: http://{{ item }}/db
+        return_content: yes
+      with_items: "{{ groups.loadbalancers }}"
+      register: db_response
+      failed_when: "'Database Connected from ' not in db_response.content"
+
 - hosts: loadbalancers 
   gather_facts: no
   tasks:
