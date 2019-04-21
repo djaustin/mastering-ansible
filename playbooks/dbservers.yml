@@ -2,9 +2,33 @@
 - hosts: dbservers
   gather_facts: no
   tasks: 
+    - name: Install tools
+      become: yes
+      package: 
+        name: "{{ item }}"
+        state: present
+      with_items: 
+        - MySQL-python
     - name: Install mariadb-server
       become: yes
       package:
         name: mariadb-server
         state: present
-      
+    - name: Ensure mariadb running
+      become: yes
+      service:
+        name: mariadb
+        state: started
+    - name: Create demo database
+      become: yes
+      mysql_db: 
+        name: demo
+        state: present
+    - name: Create database users
+      become: yes
+      mysql_user: 
+        name: demo
+        password: demo
+        priv: demo.*:ALL
+        host: '%'
+        state: present

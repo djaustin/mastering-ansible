@@ -17,3 +17,20 @@
         state: started
       tags:
         - nginx
+    - name: Configure nginx root file
+      become: yes
+      copy:
+        dest: /etc/nginx/nginx.conf
+        src: files/nginx.conf
+    - name: Configure nginx site
+      become: yes
+      template: 
+        src: templates/demo.conf.j2
+        dest: /etc/nginx/conf.d/demo.conf
+      notify: restart nginx
+  handlers:
+    - name: restart nginx
+      become: yes
+      service:
+        name: nginx
+        state: restarted

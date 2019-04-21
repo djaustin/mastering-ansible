@@ -12,6 +12,14 @@
         - mod_wsgi
         - python-virtualenv
         - python-pip
+        - MySQL-python
+    - name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+      become: yes
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+      notify: restart httpd
     - name: Ensure Apache is started
       become: yes
       service:

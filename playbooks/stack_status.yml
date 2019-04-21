@@ -1,0 +1,72 @@
+---
+- hosts: loadbalancers
+  gather_facts: no
+  become: yes
+  tasks: 
+    - name: verify nginx service
+      command: systemctl status nginx
+      register: command_output
+      changed_when: no
+    - name: verify nginx listening on port 80
+      wait_for: 
+        port: 80
+        timeout: 2
+
+- hosts: webservers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: verify httpd service
+      command: systemctl status httpd
+      register: command_output
+      changed_when: no
+    - name: verify httpd listening on port 80
+      wait_for: 
+        port: 80
+        timeout: 2
+
+- hosts: dbservers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: verify mariadb service
+      command: systemctl status mariadb
+      register: command_output
+      changed_when: no
+    - name: verify mariadb listening on port 3306
+      wait_for: 
+        port: 3306
+        timeout: 2
+
+- hosts: control
+  gather_facts: no
+  tasks: 
+    - name: verify end-to-end response
+      uri: 
+        url: http://{{ item }}
+        return_content: yes
+      with_items: "{{ groups.loadbalancers }}"
+      register: end_to_end_response
+      failed_when: "'Hello, from sunny' not in end_to_end_response.content"
+
+- hosts: loadbalancers 
+  gather_facts: no
+  tasks:
+    - name: verify backend index response
+      uri: 
+        url: http://{{ item }}
+        return_content: yes
+      with_items: "{{ groups.webservers }}"
+      register: backend_response
+      failed_when: "'Hello, from sunny ' + item + '!' not in backend_response.content"
+
+- hosts: loadbalancers 
+  gather_facts: no
+  tasks:
+    - name: verify backend database response
+      uri: 
+        url: http://{{ item }}/db
+        return_content: yes
+      with_items: "{{ groups.webservers }}"
+      register: db_response
+      failed_when: "'Database Connected from ' + item + '!' not in db_response.content"
