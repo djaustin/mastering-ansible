@@ -1,10 +1,5 @@
 ---
 - hosts: control
   gather_facts: no
-  tasks: 
-    - name: Ensure cURL installed
-      become: yes
-      apt: 
-        name: curl
-        state: present
-      
+  roles:
+    - control
