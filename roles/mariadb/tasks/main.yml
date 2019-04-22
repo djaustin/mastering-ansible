@@ -12,6 +12,13 @@
   package:
     name: mariadb-server
     state: present
+- name: Configure mariadb to use eth0 interface
+  become: yes
+  lineinfile:
+    insertafter: \[mysqld\] 
+    line: bind-address = {{ ansible_eth0.ipv4.address }}
+    path: /etc/my.cnf.d/server.cnf
+  notify: restart mariadb
 - name: Ensure mariadb running
   become: yes
   service:
@@ -20,13 +27,13 @@
 - name: Create demo database
   become: yes
   mysql_db: 
-    name: demo
+    name: "{{ mariadb_db_name }}"
     state: present
 - name: Create database users
   become: yes
   mysql_user: 
-    name: demo
-    password: demo
-    priv: demo.*:ALL
-    host: '%'
+    name: "{{ mariadb_db_user_name }}"
+    password: "{{ mariadb_db_user_password }}"
+    priv: "{{ mariadb_db_name}}.*:ALL"
+    host: "{{ mariadb_db_user_host }}"
     state: present

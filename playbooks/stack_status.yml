@@ -27,7 +27,7 @@
 
 - hosts: dbservers
   become: yes
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - name: verify mariadb service
       command: systemctl status mariadb
@@ -35,6 +35,7 @@
       changed_when: no
     - name: verify mariadb listening on port 3306
       wait_for: 
+        host: "{{ ansible_eth0.ipv4.address }}"
         port: 3306
         timeout: 2
 

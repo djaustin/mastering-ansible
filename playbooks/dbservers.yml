@@ -1,5 +1,5 @@
 ---
 - hosts: dbservers
-  gather_facts: no
+  gather_facts: yes
   roles:
     - mariadb

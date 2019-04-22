@@ -1,2 +1,6 @@
 ---
 # defaults file for mariadb
+mariadb_db_name: myapp
+mariadb_db_user_name: dbuser
+mariadb_db_user_password: dbpass
+mariadb_db_user_host: localhost
